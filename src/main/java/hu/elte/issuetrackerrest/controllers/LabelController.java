@@ -1,6 +1,5 @@
 package hu.elte.issuetrackerrest.controllers;
-
-import hu.elte.issuetrackerrest.entities.Label;
+ import hu.elte.issuetrackerrest.entities.Label;
 import hu.elte.issuetrackerrest.repositories.LabelRepository;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +12,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-@RestController
+ @RestController
 @RequestMapping("/labels")
 public class LabelController {
-    
     @Autowired
     private LabelRepository labelRepository;
     
@@ -41,29 +38,26 @@ public class LabelController {
         Label savedLabel = labelRepository.save(label);
         return ResponseEntity.ok(savedLabel);
     }
-    /*
-    modositas, mi alapjan modositunk, melyik vegponton leszek
-    path-ból kiolvassa az id-t, a htttp uzenetből kiolvassa az issue objectuomot,
-    beadandónál a pathVariable az egyenlő-e, mint az issue id-ja, ha nem, akk badrequest hiba
-    */
+    
     @PutMapping("/{id}")
-    public ResponseEntity<Label> update(@PathVariable Integer id, @RequestBody Label label){
+    public ResponseEntity<Label> put(@RequestBody Label label, @PathVariable Integer id) {
         Optional<Label> oLabel = labelRepository.findById(id);
         if (oLabel.isPresent()) {
-            label.setId(id); //igy nem kell lekezelni, hogy a pathVariable és az issue variable-je egyenlő-e
+            label.setId(id);
             return ResponseEntity.ok(labelRepository.save(label));
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+    
     @DeleteMapping("/{id}")
-    public ResponseEntity<Label> delete(@PathVariable Integer id){
-    Optional<Label> oLabel = labelRepository.findById(id);
+    public ResponseEntity delete(@PathVariable Integer id) {
+        Optional<Label> oLabel = labelRepository.findById(id);
         if (oLabel.isPresent()) {
             labelRepository.deleteById(id);
-            return ResponseEntity.ok().build(); //ha az ok()-nak nincs paramétere, akkor build()-et kell utána írni!
+            return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();
         }
-}
+    }
 }

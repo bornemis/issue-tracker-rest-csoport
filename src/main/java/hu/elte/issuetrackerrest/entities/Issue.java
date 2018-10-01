@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -50,4 +52,9 @@ public class Issue {
     //egyik entitásban mi referál vissza ránk
     @OneToMany(mappedBy="issue") //message-ben megjelenik az issue_id oszlop
     private List<Message> messages;
+    //sok sok kapcsolat a label es az issue kozott
+    @ManyToMany
+    @JoinTable //testre lehetne szabni, hogy mi legyen a neve, kapcsoló mezők stb., alapból issue_labels lesz
+    private List<Label> labels;
+    
 }

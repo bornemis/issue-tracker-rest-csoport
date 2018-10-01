@@ -1,19 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hu.elte.issuetrackerrest.entities;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,29 +15,26 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-@Entity
+ @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
 public class Label {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column
+     @Column
     @NotNull
     private String text;
-    @Column(updatable=false)
+     @Column(updatable = false)
     @CreationTimestamp
     private LocalDateTime created_at;
-    @Column
+     @Column
     @UpdateTimestamp
     private LocalDateTime updated_at;
-    //több message tartozik egy issue-hoz
-   /* @ManyToOne
-    //2 tábla közötti kapcsolatot biztosítja
-    @JoinColumn
-    @JsonIgnore //issue oldalról, ha lekérem a dolgokat, akkor az issue-hoz tartozó message-ek is jönnek, fordítva viszont nem!
-    private Issue issue;*/
-}
+     @ManyToMany(mappedBy="labels") //rám az issue-knál mire hivatkoznak
+     @JsonIgnore //label lekerdezesnel nem fogja megjeleniteni a hozza tartozo issue-kat
+     private List<Issue> issues;
+ }
