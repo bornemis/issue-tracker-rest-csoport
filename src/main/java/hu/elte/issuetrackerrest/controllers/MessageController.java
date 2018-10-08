@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/messages")
 public class MessageController {
-    
     @Autowired
     private MessageRepository messageRepository;
     
@@ -41,29 +40,29 @@ public class MessageController {
         Message savedMessage = messageRepository.save(message);
         return ResponseEntity.ok(savedMessage);
     }
-    /*
-    modositas, mi alapjan modositunk, melyik vegponton leszek
-    path-ból kiolvassa az id-t, a htttp uzenetből kiolvassa az issue objectuomot,
-    beadandónál a pathVariable az egyenlő-e, mint az issue id-ja, ha nem, akk badrequest hiba
-    */
+    
     @PutMapping("/{id}")
-    public ResponseEntity<Message> update(@PathVariable Integer id, @RequestBody Message message){
+    public ResponseEntity<Message> update
+            (@PathVariable Integer id,
+             @RequestBody Message message) {
         Optional<Message> oMessage = messageRepository.findById(id);
         if (oMessage.isPresent()) {
-            message.setId(id); //igy nem kell lekezelni, hogy a pathVariable és az issue variable-je egyenlő-e
+            message.setId(id);
             return ResponseEntity.ok(messageRepository.save(message));
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+            
     @DeleteMapping("/{id}")
-    public ResponseEntity<Message> delete(@PathVariable Integer id){
-    Optional<Message> oMessage = messageRepository.findById(id);
+    public ResponseEntity<Message> delete
+            (@PathVariable Integer id) {
+        Optional<Message> oMessage = messageRepository.findById(id);
         if (oMessage.isPresent()) {
             messageRepository.deleteById(id);
-            return ResponseEntity.ok().build(); //ha az ok()-nak nincs paramétere, akkor build()-et kell utána írni!
+            return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();
         }
-}
+    }
 }

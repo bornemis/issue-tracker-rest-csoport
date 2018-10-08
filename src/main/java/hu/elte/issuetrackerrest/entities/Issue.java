@@ -1,5 +1,6 @@
 package hu.elte.issuetrackerrest.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.Column;
@@ -7,8 +8,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -40,7 +43,7 @@ public class Issue {
     @NotNull
     private String place;
 
-    @Column(updatable=false)
+    @Column(updatable = false)
     @CreationTimestamp
     private LocalDateTime created_at;
 
@@ -48,13 +51,15 @@ public class Issue {
     @UpdateTimestamp
     private LocalDateTime updated_at;
     
-    //egy Issue-hoz több Message tartozik
-    //egyik entitásban mi referál vissza ránk
-    @OneToMany(mappedBy="issue") //message-ben megjelenik az issue_id oszlop
+    @OneToMany(mappedBy = "issue")
     private List<Message> messages;
-    //sok sok kapcsolat a label es az issue kozott
+    
     @ManyToMany
-    @JoinTable //testre lehetne szabni, hogy mi legyen a neve, kapcsoló mezők stb., alapból issue_labels lesz
+    @JoinTable
     private List<Label> labels;
     
+    @ManyToOne
+    @JoinColumn
+    @JsonIgnore
+    private User user;
 }
